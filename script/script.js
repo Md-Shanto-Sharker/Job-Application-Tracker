@@ -84,6 +84,12 @@ mainContainer.addEventListener("click", function (event) {
       filterSection.removeChild(parentCard);
     }
     allCardsCount();
+    if (currentStatus === "interview-btn") {
+      renderInterview();
+    }
+    if (currentStatus === "rejected-btn") {
+      renderRejected();
+    }
   }
 
   if (event.target.classList.contains("interview-button")) {
