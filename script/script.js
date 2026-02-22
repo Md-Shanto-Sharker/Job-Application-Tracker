@@ -7,7 +7,7 @@ let interview = document.getElementById("interview");
 let rejected = document.getElementById("rejected");
 
 const allBtn = document.getElementById("all-btn");
-// const noJobSection = document.getElementById("no-job");
+const noJobSection = document.getElementById("no-job");
 const interviewBtn = document.getElementById("interview-btn");
 const rejectedBtn = document.getElementById("rejected-btn");
 
@@ -34,6 +34,7 @@ function toggleStyle(id) {
 
   const selected = document.getElementById(id);
   currentStatus = id;
+
   selected.classList.remove("bg-white", "text-gray-500");
   selected.classList.add("bg-blue-500", "text-white");
 
@@ -54,16 +55,13 @@ function toggleStyle(id) {
 mainContainer.addEventListener("click", function (event) {
   if (event.target.classList.contains("interview-button")) {
     const parentNode = event.target.parentNode.parentNode;
-
     const companyName = parentNode.querySelector(".companyName").innerText;
     const position = parentNode.querySelector(".position").innerText;
     const locationTypeSalary = parentNode.querySelector(
       ".location-type-salary",
     ).innerText;
-    const stetus = parentNode.querySelector(".stetus").innerText;
     const description = parentNode.querySelector(".description").innerText;
     parentNode.querySelector(".stetus").innerText = "Interview";
-
     const cardInfo = {
       companyName,
       position,
@@ -75,7 +73,6 @@ mainContainer.addEventListener("click", function (event) {
     const companyExist = interviewList.find(
       (item) => item.companyName == cardInfo.companyName,
     );
-
     if (!companyExist) {
       interviewList.push(cardInfo);
     }
@@ -89,7 +86,6 @@ mainContainer.addEventListener("click", function (event) {
     if (currentStatus == "rejected-btn") {
       renderRejected();
     }
-    // renderInterview();
   } else if (event.target.classList.contains("rejected-button")) {
     const parentNode = event.target.parentNode.parentNode;
     const companyName = parentNode.querySelector(".companyName").innerText;
@@ -97,10 +93,8 @@ mainContainer.addEventListener("click", function (event) {
     const locationTypeSalary = parentNode.querySelector(
       ".location-type-salary",
     ).innerText;
-    const stetus = parentNode.querySelector(".stetus").innerText;
     const description = parentNode.querySelector(".description").innerText;
     parentNode.querySelector(".stetus").innerText = "Rejected";
-
     const cardInfo = {
       companyName,
       position,
@@ -132,6 +126,12 @@ mainContainer.addEventListener("click", function (event) {
 
 function renderRejected() {
   filterSection.innerHTML = "";
+  if (rejectedList.length === 0) {
+    noJobSection.classList.remove("hidden");
+    return;
+  } else {
+    noJobSection.classList.add("hidden");
+  }
   for (let reject of rejectedList) {
     let div = document.createElement("div");
     div.className = "p-8 shadow-xs bg-white rounded-md";
@@ -173,8 +173,15 @@ function renderRejected() {
     filterSection.appendChild(div);
   }
 }
+
 function renderInterview() {
   filterSection.innerHTML = "";
+  if (interviewList.length === 0) {
+    noJobSection.classList.remove("hidden");
+    return;
+  } else {
+    noJobSection.classList.add("hidden");
+  }
   for (let inter of interviewList) {
     let div = document.createElement("div");
     div.className = "p-8 shadow-xs bg-white rounded-md";
@@ -208,8 +215,8 @@ function renderInterview() {
               </p>
             </div>
             <div class="flex gap-5">
-              <button class="btn btn-outline btn-success">INTERVIEW</button>
-              <button class="btn btn-outline btn-error">REJECTED</button>
+              <button class="btn btn-outline btn-success interview-button">INTERVIEW</button>
+              <button class="btn btn-outline btn-error rejected-button">REJECTED</button>
             </div>
           </div>
     `;
