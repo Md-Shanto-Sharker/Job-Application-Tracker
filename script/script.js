@@ -15,10 +15,24 @@ const allCards = document.getElementById("allCards");
 const mainContainer = document.querySelector("main");
 const filterSection = document.getElementById("filtered-section");
 
+const jobsCountText = document.querySelector("#total-jobs");
+
+function updateJobsText() {
+  const totalJobs = allCards.children.length;
+  if (currentStatus === "all-btn" || currentStatus === "all") {
+    jobsCountText.innerText = `${totalJobs} jobs`;
+  } else if (currentStatus === "interview-btn") {
+    jobsCountText.innerText = `${interviewList.length} of ${totalJobs} jobs`;
+  } else if (currentStatus === "rejected-btn") {
+    jobsCountText.innerText = `${rejectedList.length} of ${totalJobs} jobs`;
+  }
+}
+
 function allCardsCount() {
   total.innerText = allCards.children.length;
   interview.innerText = interviewList.length;
   rejected.innerText = rejectedList.length;
+  updateJobsText();
 }
 allCardsCount();
 
@@ -50,6 +64,7 @@ function toggleStyle(id) {
     filterSection.classList.remove("hidden");
     renderRejected();
   }
+  updateJobsText();
 }
 
 mainContainer.addEventListener("click", function (event) {
@@ -72,14 +87,16 @@ mainContainer.addEventListener("click", function (event) {
   }
 
   if (event.target.classList.contains("interview-button")) {
-    const parentNode = event.target.parentNode.parentNode;
+    const parentNode = event.target.closest(".p-8");
     const companyName = parentNode.querySelector(".companyName").innerText;
     const position = parentNode.querySelector(".position").innerText;
     const locationTypeSalary = parentNode.querySelector(
       ".location-type-salary",
     ).innerText;
     const description = parentNode.querySelector(".description").innerText;
+
     parentNode.querySelector(".stetus").innerText = "Interview";
+
     const cardInfo = {
       companyName,
       position,
@@ -87,32 +104,28 @@ mainContainer.addEventListener("click", function (event) {
       stetus: "Interview",
       description,
     };
-
     const companyExist = interviewList.find(
       (item) => item.companyName == cardInfo.companyName,
     );
-    if (!companyExist) {
-      interviewList.push(cardInfo);
-    }
+    if (!companyExist) interviewList.push(cardInfo);
     rejectedList = rejectedList.filter(
       (item) => item.companyName != cardInfo.companyName,
     );
     allCardsCount();
-    if (currentStatus == "interview-btn") {
-      renderInterview();
-    }
-    if (currentStatus == "rejected-btn") {
-      renderRejected();
-    }
+    if (currentStatus == "interview-btn") renderInterview();
+    if (currentStatus == "rejected-btn") renderRejected();
   } else if (event.target.classList.contains("rejected-button")) {
-    const parentNode = event.target.parentNode.parentNode;
+    const parentNode = event.target.closest(".p-8");
+
     const companyName = parentNode.querySelector(".companyName").innerText;
     const position = parentNode.querySelector(".position").innerText;
     const locationTypeSalary = parentNode.querySelector(
       ".location-type-salary",
     ).innerText;
     const description = parentNode.querySelector(".description").innerText;
+
     parentNode.querySelector(".stetus").innerText = "Rejected";
+
     const cardInfo = {
       companyName,
       position,
@@ -125,119 +138,123 @@ mainContainer.addEventListener("click", function (event) {
       (item) => item.companyName == cardInfo.companyName,
     );
 
-    if (!companyExist) {
-      rejectedList.push(cardInfo);
-    }
+    if (!companyExist) rejectedList.push(cardInfo);
+
     interviewList = interviewList.filter(
       (item) => item.companyName != cardInfo.companyName,
     );
-    allCardsCount();
-    if (currentStatus == "rejected-btn") {
-      renderRejected();
-    }
 
-    if (currentStatus == "interview-btn") {
-      renderInterview();
-    }
+    allCardsCount();
+
+    if (currentStatus == "rejected-btn") renderRejected();
+    if (currentStatus == "interview-btn") renderInterview();
   }
 });
 
 function renderRejected() {
   filterSection.innerHTML = "";
+
   if (rejectedList.length === 0) {
     noJobSection.classList.remove("hidden");
+    updateJobsText();
     return;
   } else {
     noJobSection.classList.add("hidden");
   }
+
   for (let reject of rejectedList) {
     let div = document.createElement("div");
     div.className = "p-8 shadow-xs bg-white rounded-md";
-    div.innerHTML = `
-    <div class="space-y-6 ">
-            <div>
-              <div class="flex items-center justify-between">
-                <div>
-                  <p class="text-[#002C5C] companyName text-2xl font-bold">
-                    ${reject.companyName}
-                  </p>
-                  <p class="text-[#64748B] position">${reject.position}</p>
-                </div>
-                <div
-                  class="border-2 border-gray-300 rounded-full w-10 h-10 flex items-center justify-center"
-                >
-                  <i class="fa-solid fa-trash-can text-[#64748B]"></i>
-                </div>
-              </div>
 
-              <p class="text-[#64748B] my-6 location-type-salary">
-               ${reject.locationTypeSalary}
-              </p>
-            </div>
-            <div>
-              <button  class="btn  bg-[#EEF4FF] text-[#002C5C] stetus">
-                ${reject.stetus}
-              </button>
-              <p class="text-[#323B49] mt-3 description">
-                ${reject.description}
-              </p>
-            </div>
-            <div class="flex gap-5">
-              <button class="btn btn-outline btn-success interview-button">INTERVIEW</button>
-              <button class="btn btn-outline btn-error rejected-button">REJECTED</button>
-            </div>
-          </div>
-    `;
+    div.innerHTML = `
+<div class="space-y-6">
+  <div>
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-[#002C5C] companyName text-2xl font-bold">
+          ${reject.companyName}
+        </p>
+        <p class="text-[#64748B] position">${reject.position}</p>
+      </div>
+      <div class="border-2 border-gray-300 rounded-full w-10 h-10 flex items-center justify-center">
+        <i class="fa-solid fa-trash-can text-[#64748B]"></i>
+      </div>
+    </div>
+
+    <p class="text-[#64748B] my-6 location-type-salary">
+      ${reject.locationTypeSalary}
+    </p>
+  </div>
+
+  <div>
+    <button class="btn bg-[#EEF4FF] text-[#002C5C] stetus">
+      ${reject.stetus}
+    </button>
+    <p class="text-[#323B49] mt-3 description">
+      ${reject.description}
+    </p>
+  </div>
+
+  <div class="flex gap-5">
+    <button class="btn btn-outline btn-success interview-button">INTERVIEW</button>
+    <button class="btn btn-outline btn-error rejected-button">REJECTED</button>
+  </div>
+</div>
+`;
+
     filterSection.appendChild(div);
   }
+
+  updateJobsText();
 }
 
 function renderInterview() {
   filterSection.innerHTML = "";
+
   if (interviewList.length === 0) {
     noJobSection.classList.remove("hidden");
+    updateJobsText();
     return;
   } else {
     noJobSection.classList.add("hidden");
   }
+
   for (let inter of interviewList) {
     let div = document.createElement("div");
     div.className = "p-8 shadow-xs bg-white rounded-md";
     div.innerHTML = `
-    <div class="space-y-6 ">
-            <div>
-              <div class="flex items-center justify-between">
-                <div>
-                  <p class="text-[#002C5C] companyName text-2xl font-bold">
-                    ${inter.companyName}
-                  </p>
-                  <p class="text-[#64748B] position">${inter.position}</p>
-                </div>
-                <div
-                  class="border-2 border-gray-300 rounded-full w-10 h-10 flex items-center justify-center"
-                >
-                  <i class="fa-solid fa-trash-can text-[#64748B]"></i>
-                </div>
-              </div>
-
-              <p class="text-[#64748B] my-6 location-type-salary">
-               ${inter.locationTypeSalary}
-              </p>
-            </div>
-            <div>
-              <button  class="btn  bg-[#EEF4FF] text-[#002C5C] stetus">
-                ${inter.stetus}
-              </button>
-              <p class="text-[#323B49] mt-3 description">
-                ${inter.description}
-              </p>
-            </div>
-            <div class="flex gap-5">
-              <button class="btn btn-outline btn-success interview-button">INTERVIEW</button>
-              <button class="btn btn-outline btn-error rejected-button">REJECTED</button>
-            </div>
-          </div>
-    `;
+<div class="space-y-6">
+  <div>
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-[#002C5C] companyName text-2xl font-bold">
+          ${inter.companyName}
+        </p>
+        <p class="text-[#64748B] position">${inter.position}</p>
+      </div>
+      <div class="border-2 border-gray-300 rounded-full w-10 h-10 flex items-center justify-center">
+        <i class="fa-solid fa-trash-can text-[#64748B]"></i>
+      </div>
+    </div>
+    <p class="text-[#64748B] my-6 location-type-salary">
+      ${inter.locationTypeSalary}
+    </p>
+  </div>
+  <div>
+    <button class="btn bg-[#EEF4FF] text-[#002C5C] stetus">
+      ${inter.stetus}
+    </button>
+    <p class="text-[#323B49] mt-3 description">
+      ${inter.description}
+    </p>
+  </div>
+  <div class="flex gap-5">
+    <button class="btn btn-outline btn-success interview-button">INTERVIEW</button>
+    <button class="btn btn-outline btn-error rejected-button">REJECTED</button>
+  </div>
+</div>
+`;
     filterSection.appendChild(div);
   }
+  updateJobsText();
 }
