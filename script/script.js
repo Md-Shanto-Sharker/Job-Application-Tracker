@@ -53,6 +53,24 @@ function toggleStyle(id) {
 }
 
 mainContainer.addEventListener("click", function (event) {
+  if (event.target.classList.contains("fa-trash-can")) {
+    const parentCard = event.target.closest(".p-8");
+    const companyName = parentCard.querySelector(".companyName").innerText;
+    interviewList = interviewList.filter(
+      (item) => item.companyName !== companyName,
+    );
+    rejectedList = rejectedList.filter(
+      (item) => item.companyName !== companyName,
+    );
+    if (allCards.contains(parentCard)) {
+      allCards.removeChild(parentCard);
+    }
+    if (filterSection.contains(parentCard)) {
+      filterSection.removeChild(parentCard);
+    }
+    allCardsCount();
+  }
+
   if (event.target.classList.contains("interview-button")) {
     const parentNode = event.target.parentNode.parentNode;
     const companyName = parentNode.querySelector(".companyName").innerText;
