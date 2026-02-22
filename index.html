@@ -31,23 +31,23 @@
   </head>
   <body class="bg-[#eff3f7] min-h-screen">
     <header class="w-[90%] mx-auto">
-      <h1 class="text-3xl font-bold text-[#002C5C] py-4">
+      <h1 class="text-2xl font-bold text-[#002C5C] py-4">
         Job Application Tracker
       </h1>
       <div class="grid grid-cols-3 lg:gap-10 gap-5">
         <div class="bg-white p-4 rounded-xl">
           <p>Total</p>
-          <p class="text-[#002C5C] font-bold text-xl">0</p>
+          <p id="total" class="text-[#002C5C] font-bold text-xl">0</p>
         </div>
 
         <div class="bg-white p-4 rounded-xl">
           <p>Interview</p>
-          <p class="text-[#10B981] font-bold text-xl">0</p>
+          <p id="interview" class="text-[#10B981] font-bold text-xl">0</p>
         </div>
 
         <div class="bg-white p-4 rounded-xl">
           <p>Rejected</p>
-          <p class="text-[#EF4444] font-bold text-xl">0</p>
+          <p id="rejected" class="text-[#EF4444] font-bold text-xl">0</p>
         </div>
       </div>
       <hr class="my-5 text-[#d7d8da]" />
@@ -59,27 +59,32 @@
         <p class="text-[#64748B] mt-1 text-lg">8 jobs</p>
       </div>
 
+      <!-- All buttons -->
       <div class="mb-6 flex gap-5">
         <button
+          onclick="toggleStyle('all-btn')"
           class="bg-[#3B82F6] text-white px-8 py-2 rounded-md"
-          id="all-filter-btn"
+          id="all-btn"
         >
           All
         </button>
         <button
+          onclick="toggleStyle('interview-btn')"
           class="bg-white text-[#64748B] px-5 py-2 rounded-md"
-          id="thriving-filter-btn"
+          id="interview-btn"
         >
           Interview
         </button>
         <button
+          onclick="toggleStyle('rejected-btn')"
           class="bg-white text-[#64748B] px-5 py-2 rounded-md"
-          id="Struggling"
+          id="rejected-btn"
         >
           Rejected
         </button>
       </div>
 
+      <!-- All Cards -->
       <section id="allCards" class="flex flex-col gap-10">
         <!-- Card-1 -->
         <div class="p-8 shadow-xs bg-white rounded-md">
@@ -87,10 +92,10 @@
             <div>
               <div class="flex items-center justify-between">
                 <div>
-                  <p class="text-[#002C5C] text-2xl font-bold">
+                  <p class="text-[#002C5C] companyName text-2xl font-bold">
                     Mobile First Corp
                   </p>
-                  <p class="text-[#64748B]">React Native Developer</p>
+                  <p class="text-[#64748B] position">React Native Developer</p>
                 </div>
                 <div
                   class="border-2 border-gray-300 rounded-full w-10 h-10 flex items-center justify-center"
@@ -99,7 +104,7 @@
                 </div>
               </div>
 
-              <p class="text-[#64748B] my-6">
+              <p class="text-[#64748B] my-6 location-type-salary">
                 Remote • Full-time • $130,000 - $175,000
               </p>
             </div>
@@ -107,7 +112,7 @@
               <button class="btn bg-[#EEF4FF] text-[#002C5C]">
                 NOT APPLIED
               </button>
-              <p class="text-[#323B49] mt-3">
+              <p class="text-[#323B49] mt-3 description">
                 Build cross-platform mobile applications using React Native.
                 Work on products used by millions of users worldwide.
               </p>
@@ -394,6 +399,6 @@
       </section>
     </main>
 
-    <script src="script.js"></script>
+    <script src="script/script.js"></script>
   </body>
 </html>
