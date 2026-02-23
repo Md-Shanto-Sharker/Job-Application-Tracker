@@ -59,6 +59,7 @@ function toggleStyle(id) {
   } else if (id == "all-btn") {
     allCards.classList.remove("hidden");
     filterSection.classList.add("hidden");
+    noJobSection.classList.add("hidden");
   } else if (id == "rejected-btn") {
     allCards.classList.add("hidden");
     filterSection.classList.remove("hidden");
@@ -114,9 +115,11 @@ mainContainer.addEventListener("click", function (event) {
       (item) => item.companyName == cardInfo.companyName,
     );
     if (!companyExist) interviewList.push(cardInfo);
+
     rejectedList = rejectedList.filter(
       (item) => item.companyName != cardInfo.companyName,
     );
+
     allCardsCount();
     if (currentStatus == "interview-btn") renderInterview();
     if (currentStatus == "rejected-btn") renderRejected();
@@ -207,10 +210,8 @@ function renderRejected() {
   </div>
 </div>
 `;
-
     filterSection.appendChild(div);
   }
-
   updateJobsText();
 }
 
